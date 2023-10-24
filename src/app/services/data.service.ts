@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable, from, map } from 'rxjs';
 import {
   Firestore,
@@ -12,50 +12,60 @@ import {
   DocumentData,
   getDocs,
 } from '@angular/fire/firestore';
-import { User } from '../model/user';
+import { COLLECTION_NAME } from './injectionToken';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DataService {
-  private usersCollection: CollectionReference<DocumentData>;
+export class DataService<T> {
+  private collectionReference: CollectionReference<DocumentData>;
 
-  constructor(private firestore: Firestore) {
-    this.usersCollection = collection(this.firestore, 'users');
+  constructor(
+    private firestore: Firestore,
+    @Inject(COLLECTION_NAME) collectionName: string
+  ) {
+    this.collectionReference = collection(this.firestore, collectionName);
   }
 
-  getAll(): Observable<User[]> {
-    const collectionRef = collection(this.firestore, 'users');
-
-    return from(getDocs(collectionRef)).pipe(
+  getAll(): Observable<T[]> {
+    return from(getDocs(this.collectionReference)).pipe(
       map((snapshot) => {
         return snapshot.docs.map(
           (doc) =>
             ({
               id: doc.id,
               ...doc.data(),
-            } as User)
+            } as T)
         );
       })
     );
   }
 
-  get(id: string) {
-    const userDocumentReference = doc(this.firestore, `users/${id}`);
-    return docData(userDocumentReference, { idField: 'id' });
+  get(id: string): Observable<T> {
+    const documentReference = doc(
+      this.firestore,
+      `${this.collectionReference.path}/${id}`
+    );
+    return docData(documentReference, { idField: 'id' }) as Observable<T>;
   }
 
-  create(user: User) {
-    return addDoc(this.usersCollection, user);
+  create<T extends { [key: string]: any }>(item: T) {
+    return addDoc(this.collectionReference, item);
   }
 
-  update(user: User) {
-    const userDocumentReference = doc(this.firestore, `users/${user.id}`);
-    return updateDoc(userDocumentReference, { ...user });
+  update(item: T & { id: string }) {
+    const documentReference = doc(
+      this.firestore,
+      `${this.collectionReference.path}/${item.id}`
+    );
+    return updateDoc(documentReference, { ...item });
   }
 
   delete(id: string) {
-    const userDocumentReference = doc(this.firestore, `users/${id}`);
-    return deleteDoc(userDocumentReference);
+    const documentReference = doc(
+      this.firestore,
+      `${this.collectionReference.path}/${id}`
+    );
+    return deleteDoc(documentReference);
   }
 }

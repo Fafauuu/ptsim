@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
 import { DataService } from './data.service';
+import { User } from '../model';
 
 describe('DataService', () => {
-  let service: DataService;
+  let service: DataService<User>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});

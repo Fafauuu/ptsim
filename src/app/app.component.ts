@@ -2,17 +2,22 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from './model/user';
 import { DataService } from './services/data.service';
+import { COLLECTION_NAME } from './services/injectionToken';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
+  providers: [
+    { provide: COLLECTION_NAME, useValue: 'users' },
+    DataService<User>,
+  ],
 })
 export class AppComponent {
   public users$: Observable<User[]>;
   public selectedUser: User | null = null;
 
-  constructor(private dataService: DataService) {
+  constructor(private dataService: DataService<User>) {
     this.users$ = this.dataService.getAll();
   }
 
@@ -24,7 +29,7 @@ export class AppComponent {
         console.log('User successfully added');
         this.users$ = this.dataService.getAll();
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error('Error adding user:', err);
       });
   }
@@ -40,7 +45,7 @@ export class AppComponent {
         console.log('User deleted successfully');
         this.users$ = this.dataService.getAll();
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error('Error deleting user:', err);
       });
   }
@@ -54,7 +59,7 @@ export class AppComponent {
           this.selectedUser = null;
           this.users$ = this.dataService.getAll();
         })
-        .catch((err) => {
+        .catch((err: any) => {
           console.error('Error updating user:', err);
         });
     }
