@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ptsim-firebase": {
+      "hosting": {
+        "ptsim-project": [
+          "ptsim-firebase"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ptsim-firebase"
+  }
+}
