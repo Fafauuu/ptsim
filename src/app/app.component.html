@@ -1,3 +1,8 @@
+<a routerLink="/schedule-visit">Schedule a Visit</a><br />
+<a routerLink="/visit-history">Visit History</a><br />
+<a routerLink="/visits">Visits</a><br />
+<a routerLink="/specialists">Our Specialists</a><br />
+
 <!-- Formularz dodawania nowego użytkownika -->
 <form #f="ngForm" (ngSubmit)="addData(f)">
   <input type="text" name="firstname" ngModel placeholder="First Name" />
@@ -57,3 +62,5 @@
   <br />
   <button type="submit">Update User</button>
 </form>
+
+<router-outlet></router-outlet>

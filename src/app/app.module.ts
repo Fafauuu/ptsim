@@ -10,9 +10,21 @@ import { environment } from '../environments/environment';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { FormsModule } from '@angular/forms';
+import { ScheduleVisitComponent } from './components/schedule-visit/schedule-visit.component';
+import { VisitHistoryComponent } from './components/visit-history/visit-history.component';
+import { HomeComponent } from './components/home/home.component';
+import { VisitsComponent } from './components/visits/visits.component';
+import { SpecialistsComponent } from './components/specialists/specialists.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [
+    AppComponent,
+    ScheduleVisitComponent,
+    HomeComponent,
+    VisitsComponent,
+    SpecialistsComponent,
+    VisitHistoryComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
