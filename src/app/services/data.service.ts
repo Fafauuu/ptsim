@@ -17,7 +17,7 @@ import { COLLECTION_NAME } from './injectionToken';
 @Injectable({
   providedIn: 'root',
 })
-export class DataService<T> {
+export class DataService<T extends { id: string }> {
   private collectionReference: CollectionReference<DocumentData>;
 
   constructor(
@@ -41,13 +41,19 @@ export class DataService<T> {
     );
   }
 
-  get(id: string): Observable<T> {
-    const documentReference = doc(
-      this.firestore,
-      `${this.collectionReference.path}/${id}`
+  get(id: string): Observable<T | null> {
+    return this.getAll().pipe(
+      map((items) => items.find((item) => item.id === id) || null)
     );
-    return docData(documentReference, { idField: 'id' }) as Observable<T>;
   }
+
+  // get(id: string): Observable<T> {
+  //   const documentReference = doc(
+  //     this.firestore,
+  //     `${this.collectionReference.path}/${id}`
+  //   );
+  //   return docData(documentReference, { idField: 'id' }) as Observable<T>;
+  // }
 
   create<T extends { [key: string]: any }>(item: T) {
     return addDoc(this.collectionReference, item);

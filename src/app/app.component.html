@@ -1,66 +1,10 @@
-<a routerLink="/schedule-visit">Schedule a Visit</a><br />
-<a routerLink="/visit-history">Visit History</a><br />
-<a routerLink="/visits">Visits</a><br />
-<a routerLink="/specialists">Our Specialists</a><br />
-
-<!-- Formularz dodawania nowego użytkownika -->
-<form #f="ngForm" (ngSubmit)="addData(f)">
-  <input type="text" name="firstname" ngModel placeholder="First Name" />
-  <br />
-  <input type="text" name="lastname" ngModel placeholder="Last Name" />
-  <br />
-  <input type="email" name="email" ngModel placeholder="Email" />
-  <br />
-  <input type="password" name="password" ngModel placeholder="Password" />
-  <br />
-  <button type="submit">Save data</button>
-</form>
-
-<!-- Wyświetlanie użytkowników -->
-<ul>
-  <li *ngFor="let data of users$ | async">
-    {{ data.firstname }} {{ data.lastname }} / {{ data.email }} / {{ data.id }}
-    <button (click)="updateUser(data)">Update</button>
-    <button (click)="deleteUser(data.id)">Delete</button>
-  </li>
-</ul>
-
-<!-- Formularz aktualizacji użytkownika -->
-<form
-  *ngIf="selectedUser"
-  #updateForm="ngForm"
-  (ngSubmit)="submitUpdate(updateForm)"
->
-  <input type="hidden" name="id" [(ngModel)]="selectedUser.id" />
-  <input
-    type="text"
-    name="firstname"
-    [(ngModel)]="selectedUser.firstname"
-    placeholder="First Name"
-  />
-  <br />
-  <input
-    type="text"
-    name="lastname"
-    [(ngModel)]="selectedUser.lastname"
-    placeholder="Last Name"
-  />
-  <br />
-  <input
-    type="email"
-    name="email"
-    [(ngModel)]="selectedUser.email"
-    placeholder="Email"
-  />
-  <br />
-  <input
-    type="password"
-    name="password"
-    [(ngModel)]="selectedUser.password"
-    placeholder="Password"
-  />
-  <br />
-  <button type="submit">Update User</button>
-</form>
-
+<header>
+  <div class="logo" (click)="navigateHome()">LOGO</div>
+  <div *ngIf="isLogged" class="username">{{ user?.firstname }}</div>
+  <div class="auth-buttons">
+    <button *ngIf="!isLogged" (click)="login()">Zaloguj</button>
+    <button *ngIf="!isLogged" (click)="signup()">Zarejestruj się</button>
+    <button *ngIf="isLogged" (click)="signout()">Wyloguj</button>
+  </div>
+</header>
 <router-outlet></router-outlet>

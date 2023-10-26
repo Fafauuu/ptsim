@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -15,6 +15,22 @@ import { VisitHistoryComponent } from './components/visit-history/visit-history.
 import { HomeComponent } from './components/home/home.component';
 import { VisitsComponent } from './components/visits/visits.component';
 import { SpecialistsComponent } from './components/specialists/specialists.component';
+import { LoginComponent } from './components/login/login.component';
+
+import { Store, StoreModule } from '@ngrx/store';
+import { reducers } from './state';
+import { EffectsModule } from '@ngrx/effects';
+import { AuthEffects } from './state/auth/auth.effects';
+import * as authActions from './state/auth/auth.actions';
+
+export function restoreStateFromLocalStorage(store: Store) {
+  return () => {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    if (user && user.userId) {
+      store.dispatch(authActions.login({ userId: user.userId }));
+    }
+  };
+}
 
 @NgModule({
   declarations: [
@@ -24,6 +40,7 @@ import { SpecialistsComponent } from './components/specialists/specialists.compo
     VisitsComponent,
     SpecialistsComponent,
     VisitHistoryComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,8 +51,17 @@ import { SpecialistsComponent } from './components/specialists/specialists.compo
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     FirestoreModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([AuthEffects]),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: restoreStateFromLocalStorage,
+      deps: [Store],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

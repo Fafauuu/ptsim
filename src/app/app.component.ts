@@ -1,8 +1,12 @@
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
-import { User } from './model/user';
-import { DataService } from './services/data.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { DataService } from '../app/services/data.service';
+import { User } from '../app/model';
 import { COLLECTION_NAME } from './services/injectionToken';
+import * as authActions from './state/auth/auth.actions';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,55 +17,52 @@ import { COLLECTION_NAME } from './services/injectionToken';
     DataService<User>,
   ],
 })
-export class AppComponent {
-  public users$: Observable<User[]>;
-  public selectedUser: User | null = null;
+export class AppComponent implements OnInit {
+  isLogged = false;
+  user: User | null = null;
 
-  constructor(private dataService: DataService<User>) {
-    this.users$ = this.dataService.getAll();
-  }
+  constructor(
+    private router: Router,
+    private store: Store<{
+      auth: { isLogged: boolean; userId: string | null };
+    }>,
+    private dataService: DataService<User>
+  ) {}
 
-  addData(f: any) {
-    console.log(f.value);
-    this.dataService
-      .create(f.value as User)
-      .then(() => {
-        console.log('User successfully added');
-        this.users$ = this.dataService.getAll();
-      })
-      .catch((err: any) => {
-        console.error('Error adding user:', err);
-      });
-  }
-
-  updateUser(user: User) {
-    this.selectedUser = { ...user };
-  }
-
-  deleteUser(id: string) {
-    this.dataService
-      .delete(id)
-      .then(() => {
-        console.log('User deleted successfully');
-        this.users$ = this.dataService.getAll();
-      })
-      .catch((err: any) => {
-        console.error('Error deleting user:', err);
-      });
-  }
-
-  submitUpdate(f: any) {
-    if (this.selectedUser) {
-      this.dataService
-        .update(this.selectedUser)
-        .then(() => {
-          console.log('User updated successfully');
-          this.selectedUser = null;
-          this.users$ = this.dataService.getAll();
+  ngOnInit() {
+    this.store
+      .select((state) => state.auth)
+      .pipe(
+        tap((authState) => {
+          this.isLogged = authState.isLogged;
+        }),
+        switchMap((authState) => {
+          if (authState.isLogged && authState.userId) {
+            return this.dataService.get(authState.userId);
+          }
+          return of(null);
         })
-        .catch((err: any) => {
-          console.error('Error updating user:', err);
-        });
-    }
+      )
+      .subscribe((user) => {
+        this.user = user as User;
+      });
+  }
+
+  navigateHome() {
+    this.router.navigate(['/home']);
+  }
+
+  login() {
+    this.router.navigate(['/login']);
+    console.log('Login clicked');
+  }
+
+  signup() {
+    console.log('Signup clicked');
+  }
+
+  signout() {
+    console.log('Signout clicked');
+    this.store.dispatch(authActions.logout());
   }
 }

@@ -1,0 +1,15 @@
+<div class="login-container">
+  <div class="logo">
+    <img src="path/to/logo/image" alt="LOGO" />
+  </div>
+  <form (submit)="login()">
+    <input type="email" [(ngModel)]="email" placeholder="email" name="email" />
+    <input
+      type="password"
+      [(ngModel)]="password"
+      placeholder="hasło"
+      name="password"
+    />
+    <button type="submit">Zaloguj</button>
+  </form>
+</div>

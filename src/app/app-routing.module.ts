@@ -5,6 +5,7 @@ import { VisitHistoryComponent } from './components/visit-history/visit-history.
 import { VisitsComponent } from './components/visits/visits.component';
 import { SpecialistsComponent } from './components/specialists/specialists.component';
 import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   { path: 'schedule-visit', component: ScheduleVisitComponent },
@@ -12,6 +13,10 @@ const routes: Routes = [
   { path: 'visits', component: VisitsComponent },
   { path: 'specialists', component: SpecialistsComponent },
   { path: 'home', component: HomeComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
   { path: '', redirectTo: '/home', pathMatch: 'full' }, // default path
 ];
 
