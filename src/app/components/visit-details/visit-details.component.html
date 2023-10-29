@@ -1,0 +1,37 @@
+<div *ngIf="doctor && visit" class="visit-details">
+  <div class="info-container">
+    <label>Imię lekarza:</label>
+    <input [(ngModel)]="doctor.firstname" [disabled]="!editable" />
+  </div>
+  <div class="info-container">
+    <label>Nazwisko lekarza:</label>
+    <input [(ngModel)]="doctor.lastname" [disabled]="!editable" />
+  </div>
+  <div class="info-container">
+    <label>Specjalizacja lekarza:</label>
+    <input [(ngModel)]="doctor.specialty" [disabled]="!editable" />
+  </div>
+  <div class="info-container">
+    <label>Data:</label>
+    <input type="date" [(ngModel)]="visit.day" [disabled]="!editable" />
+  </div>
+  <div class="info-container">
+    <label>Godzina rozpoczęcia:</label>
+    <input [(ngModel)]="visit.starttime" [disabled]="!editable" />
+  </div>
+  <div class="info-container">
+    <label>Godzina zakończenia:</label>
+    <input [(ngModel)]="visit.endtime" [disabled]="!editable" />
+  </div>
+  <div class="info-container">
+    <label>Cena:</label>
+    <input [(ngModel)]="visit.price" [disabled]="!editable" />
+  </div>
+
+  <button *ngIf="editable" (click)="saveChanges()">Umów wizytę</button>
+  <button class="back-btn" routerLink="/visits">Powrót do listy</button>
+</div>
+
+<div *ngIf="!doctor || !visit">
+  <p>Ładowanie informacji o wizycie...</p>
+</div>

@@ -6,6 +6,7 @@ import { VisitsComponent } from './components/visits/visits.component';
 import { SpecialistsComponent } from './components/specialists/specialists.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
+import { VisitDetailsComponent } from './components/visit-details/visit-details.component';
 
 const routes: Routes = [
   { path: 'schedule-visit', component: ScheduleVisitComponent },
@@ -17,7 +18,22 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent,
   },
-  { path: '', redirectTo: '/home', pathMatch: 'full' }, // default path
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  {
+    path: 'visits/:id',
+    component: VisitDetailsComponent,
+    data: { editable: false },
+  },
+  {
+    path: 'schedule-visit/:id',
+    component: VisitDetailsComponent,
+    data: { editable: true },
+  },
+  {
+    path: 'visit-history/:id',
+    component: VisitDetailsComponent,
+    data: { editable: false },
+  },
 ];
 
 @NgModule({

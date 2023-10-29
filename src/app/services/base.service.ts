@@ -1,29 +1,20 @@
-import { Inject, Injectable } from '@angular/core';
-import { Observable, from, map } from 'rxjs';
 import {
   Firestore,
-  addDoc,
-  collection,
-  doc,
-  docData,
-  deleteDoc,
-  updateDoc,
   CollectionReference,
   DocumentData,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
   getDocs,
+  updateDoc,
 } from '@angular/fire/firestore';
-import { COLLECTION_NAME } from './injectionToken';
+import { from, Observable, map } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class DataService<T extends { id: string }> {
-  private collectionReference: CollectionReference<DocumentData>;
+export abstract class BaseService<T extends { id: string }> {
+  protected collectionReference: CollectionReference<DocumentData>;
 
-  constructor(
-    private firestore: Firestore,
-    @Inject(COLLECTION_NAME) collectionName: string
-  ) {
+  constructor(protected firestore: Firestore, collectionName: string) {
     this.collectionReference = collection(this.firestore, collectionName);
   }
 
@@ -32,6 +23,7 @@ export class DataService<T extends { id: string }> {
       map((snapshot) => {
         return snapshot.docs.map((doc) => {
           const data = doc.data();
+          // Jeśli istnieje pole 'day' i ma własność 'seconds', konwertuj na Date
           if (data['day'] && data['day'].seconds) {
             data['day'] = new Date(data['day'].seconds * 1000);
           }
@@ -50,19 +42,11 @@ export class DataService<T extends { id: string }> {
     );
   }
 
-  // get(id: string): Observable<T> {
-  //   const documentReference = doc(
-  //     this.firestore,
-  //     `${this.collectionReference.path}/${id}`
-  //   );
-  //   return docData(documentReference, { idField: 'id' }) as Observable<T>;
-  // }
-
-  create<T extends { [key: string]: any }>(item: T) {
+  create(item: Omit<T, 'id'>) {
     return addDoc(this.collectionReference, item);
   }
 
-  update(item: T & { id: string }) {
+  update(item: T) {
     const documentReference = doc(
       this.firestore,
       `${this.collectionReference.path}/${item.id}`

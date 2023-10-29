@@ -1,6 +1,8 @@
 <header>
   <div class="logo" (click)="navigateHome()">LOGO</div>
-  <div *ngIf="isLogged" class="username">{{ user?.firstname }}</div>
+  <div *ngIf="isLogged" class="username">
+    {{ user?.firstname }} {{ user?.lastname }}
+  </div>
   <div class="auth-buttons">
     <button *ngIf="!isLogged" (click)="login()">Zaloguj</button>
     <button *ngIf="!isLogged" (click)="signup()">Zarejestruj się</button>

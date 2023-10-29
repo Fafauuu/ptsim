@@ -22,6 +22,7 @@ import { reducers } from './state';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './state/auth/auth.effects';
 import * as authActions from './state/auth/auth.actions';
+import { VisitDetailsComponent } from './components/visit-details/visit-details.component';
 
 export function restoreStateFromLocalStorage(store: Store) {
   return () => {
@@ -41,6 +42,7 @@ export function restoreStateFromLocalStorage(store: Store) {
     SpecialistsComponent,
     VisitHistoryComponent,
     LoginComponent,
+    VisitDetailsComponent,
   ],
   imports: [
     BrowserModule,

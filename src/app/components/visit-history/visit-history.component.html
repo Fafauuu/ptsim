@@ -1,1 +1,14 @@
-<p>visit-history works!</p>
+<div
+  *ngFor="let visit of pastVisits$ | async"
+  class="visit-item"
+  (click)="goToVisitDetails(visit.id)"
+>
+  <h3>{{ visit.doctorName }}</h3>
+  <p>{{ visit.day | date : "yyyy-MM-dd" }}</p>
+  <p>{{ visit.specialty }}</p>
+  <p>{{ visit.starttime }} - {{ visit.endtime }} {{ visit.price }}</p>
+</div>
+
+<ng-template #noVisits>
+  <p>Nie masz nadchodzących wizyt.</p>
+</ng-template>
