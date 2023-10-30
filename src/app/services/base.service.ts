@@ -51,6 +51,7 @@ export abstract class BaseService<T extends { id: string }> {
       this.firestore,
       `${this.collectionReference.path}/${item.id}`
     );
+    console.log(documentReference);
     return updateDoc(documentReference, { ...item });
   }
 

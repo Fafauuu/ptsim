@@ -1,1 +1,12 @@
-<p>specialists works!</p>
+<div
+  *ngFor="let doctor of doctors$ | async"
+  class="visit-item"
+  (click)="goToDoctorDetails(doctor.id)"
+>
+  <h3>{{ doctor.firstname }} {{ doctor.lastname }}</h3>
+  <p>{{ doctor.specialty }}</p>
+</div>
+
+<ng-template #noVisits>
+  <p>Brak specjalistów do wyświetlenia.</p>
+</ng-template>

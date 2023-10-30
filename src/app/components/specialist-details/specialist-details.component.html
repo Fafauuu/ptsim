@@ -1,0 +1,23 @@
+<div *ngIf="doctor" class="specialist-details">
+  <div class="info-container">
+    <label>Imię lekarza:</label>
+    <span>{{ doctor.firstname }}</span>
+  </div>
+  <div class="info-container">
+    <label>Nazwisko lekarza:</label>
+    <span>{{ doctor.lastname }}</span>
+  </div>
+  <div class="info-container">
+    <label>Specjalizacja lekarza:</label>
+    <span>{{ doctor.specialty }}</span>
+  </div>
+  <div class="info-container" *ngIf="doctor.description">
+    <label>Opis:</label>
+    <span>{{ doctor.description }}</span>
+  </div>
+  <button class="back-btn" routerLink="/specialists">Powrót do listy</button>
+</div>
+
+<div *ngIf="!doctor">
+  <p>Ładowanie informacji o specjaliście...</p>
+</div>

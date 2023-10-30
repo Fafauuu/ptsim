@@ -1,1 +1,45 @@
-<p>schedule-visit works!</p>
+<!-- Filtry -->
+<div class="filters">
+  <div>
+    <label for="dateFilter">Data:</label>
+    <select
+      [(ngModel)]="selectedDate"
+      (change)="onDateFilterChange(selectedDate)"
+    >
+      <option *ngFor="let visit of upcomingVisits$ | async" [value]="visit.day">
+        {{ visit.day | date : "yyyy-MM-dd" }}
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label for="specialtyFilter">Specjalizacja:</label>
+    <select
+      [(ngModel)]="selectedSpeciality"
+      (change)="onSpecialtyFilterChange(selectedSpeciality)"
+    >
+      <option
+        *ngFor="let visit of upcomingVisits$ | async"
+        [value]="visit.specialty"
+      >
+        {{ visit.specialty }}
+      </option>
+    </select>
+  </div>
+</div>
+
+<!-- Lista wizyt -->
+<div
+  *ngFor="let visit of upcomingVisits$ | async"
+  class="visit-item"
+  (click)="goToVisitDetails(visit.id)"
+>
+  <h3>{{ visit.doctorName }}</h3>
+  <p>{{ visit.day | date : "yyyy-MM-dd" }}</p>
+  <p>{{ visit.specialty }}</p>
+  <p>{{ visit.starttime }} - {{ visit.endtime }} {{ visit.price }}</p>
+</div>
+
+<ng-template #noVisits>
+  <p>Brak wizyt.</p>
+</ng-template>

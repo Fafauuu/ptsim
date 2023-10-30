@@ -1,5 +1,7 @@
 <header>
-  <div class="logo" (click)="navigateHome()">LOGO</div>
+  <div class="logo" (click)="navigateHome()">
+    <img src="assets/logo.png" alt="Logo" class="header-logo" />
+  </div>
   <div *ngIf="isLogged" class="username">
     {{ user?.firstname }} {{ user?.lastname }}
   </div>

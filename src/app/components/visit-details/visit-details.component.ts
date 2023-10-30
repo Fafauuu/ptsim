@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Visit, Doctor } from '../../model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { VisitsService, DoctorsService } from '../../services';
+import { Store } from '@ngrx/store';
+import { selectUserId } from '../../state/auth/auth.selectors';
 
 @Component({
   selector: 'app-visit-details',
@@ -9,16 +11,18 @@ import { VisitsService, DoctorsService } from '../../services';
   styleUrls: ['./visit-details.component.scss'],
 })
 export class VisitDetailsComponent implements OnInit {
-  public visit!: Visit;
-  public doctor!: Doctor;
+  public visit: Visit | null = null;
+  public visitDate: string | null = null;
+  public doctor: Doctor | null = null;
   public editable: boolean = false;
-  public errorMessage: string | null = null; // Do wyświetlania błędów
-  public successMessage: string | null = null; // Do wyświetlania powiadomień o sukcesie
+  private userId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private visitsService: VisitsService,
-    private doctorsService: DoctorsService
+    private doctorsService: DoctorsService,
+    private store: Store,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -26,13 +30,19 @@ export class VisitDetailsComponent implements OnInit {
     const urlSegments = this.route.snapshot.url.map((segment) => segment.path);
     const visitId = urlSegments[urlSegments.length - 1]; // Pobiera ostatni segment ścieżki
 
-    console.log('was here', visitId);
+    this.store.select(selectUserId).subscribe((userId) => {
+      this.userId = userId;
+    });
 
     if (visitId) {
       // Pobierz dane wizyty na podstawie visitId
       this.visitsService.get(visitId).subscribe((visit) => {
-        // console.log(visit);
+        console.log(visit);
         this.visit = visit!;
+        let dateObj = new Date(visit!.day);
+        this.visitDate = `${dateObj.getFullYear()}-${String(
+          dateObj.getMonth() + 1
+        ).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
 
         // Zakładając, że wizyta ma pole 'doctorId' do identyfikacji doktora
         this.doctorsService.get(this.visit!.doctorid).subscribe((doctor) => {
@@ -43,17 +53,14 @@ export class VisitDetailsComponent implements OnInit {
   }
 
   saveChanges(): void {
-    console.log(this.visit!);
-    // this.visitsService
-    //   .update(this.visit!)
-    //   .then((response) => {
-    //     this.successMessage = 'Dane zostały zaktualizowane pomyślnie!';
-    //     this.errorMessage = null;
-    //   })
-    //   .catch((error) => {
-    //     this.errorMessage =
-    //       'Wystąpił błąd podczas aktualizacji danych. Proszę spróbować ponownie.';
-    //     this.successMessage = null;
-    //   });
+    if (this.visit && this.userId) {
+      this.visit.userid = this.userId; // Dodaj userId do wizyty
+      console.log(this.userId);
+
+      this.visitsService.update(this.visit).then(() => {
+        console.log('done');
+        this.router.navigate(['/home']);
+      });
+    }
   }
 }
