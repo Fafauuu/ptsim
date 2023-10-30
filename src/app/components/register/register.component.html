@@ -1,0 +1,14 @@
+<div class="login-container">
+  <form [formGroup]="registerForm" (submit)="register()">
+    <input type="email" formControlName="email" placeholder="email" />
+    <input type="text" formControlName="firstname" placeholder="imie" />
+    <input type="text" formControlName="lastname" placeholder="nazwisko" />
+    <input type="password" formControlName="password" placeholder="hasło" />
+    <input
+      type="password"
+      formControlName="confirmPassword"
+      placeholder="powtórz hasło"
+    />
+    <button type="submit" [disabled]="!registerForm.valid">Zarejestruj</button>
+  </form>
+</div>

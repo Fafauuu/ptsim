@@ -24,6 +24,8 @@ import { AuthEffects } from './state/auth/auth.effects';
 import * as authActions from './state/auth/auth.actions';
 import { VisitDetailsComponent } from './components/visit-details/visit-details.component';
 import { SpecialistDetailsComponent } from './components/specialist-details/specialist-details.component';
+import { RegisterComponent } from './components/register/register.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export function restoreStateFromLocalStorage(store: Store) {
   return () => {
@@ -45,12 +47,14 @@ export function restoreStateFromLocalStorage(store: Store) {
     LoginComponent,
     VisitDetailsComponent,
     SpecialistDetailsComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),

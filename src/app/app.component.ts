@@ -54,11 +54,10 @@ export class AppComponent implements OnInit {
 
   login() {
     this.router.navigate(['/login']);
-    console.log('Login clicked');
   }
 
   signup() {
-    console.log('Signup clicked');
+    this.router.navigate(['/register']);
   }
 
   signout() {
